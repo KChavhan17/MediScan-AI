@@ -25,17 +25,23 @@ async function scanMedicine() {
                     contents: [{
                         parts: [
                             { text: "Identify this medicine. List: 1. Name 2. Uses 3. Dosage 4. Side Effects. Keep it short." },
-                            { inline_data: { mime_type: "image/jpeg", data: base64Data } }
+                            { inline_data: { mime_type: file.type, data: base64Data } }
                         ]
                     }]
                 })
             });
 
             const data = await response.json();
-            const textResponse = data.candidates[0].content.parts[0].text;
-            resultDiv.innerText = textResponse;
+            
+            // This checks if the API returned an error message
+            if (data.error) {
+                resultDiv.innerText = "API Error: " + data.error.message;
+            } else {
+                const textResponse = data.candidates[0].content.parts[0].text;
+                resultDiv.innerText = textResponse;
+            }
         } catch (error) {
-            resultDiv.innerText = "Error: Check your API Key or connection.";
+            resultDiv.innerText = "Connection error. Please try again.";
         }
     };
 
