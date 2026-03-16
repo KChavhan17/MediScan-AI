@@ -1,4 +1,4 @@
-const API_KEY = "PASTE_YOUR_KEY_HERE";
+const API_KEY = "AIzaSyDvyx6XLrG1i67RWHcry-_-zDm2mBOpNek";
 
 async function scanMedicine() {
     const fileInput = document.getElementById('imageInput');
