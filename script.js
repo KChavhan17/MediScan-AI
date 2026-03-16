@@ -18,14 +18,14 @@ async function scanMedicine() {
         const base64Data = reader.result.split(',')[1];
 
         try {
-            // This is the stable V1 URL
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            // Updated to v1beta which is more stable for the Flash model in some regions
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{
                         parts: [
-                            { text: "Identify this medicine. List name and primary uses clearly." },
+                            { text: "Identify this medicine. List: 1. Name 2. Main Uses 3. Dosage 4. Side Effects. Keep it brief." },
                             { inline_data: { mime_type: file.type, data: base64Data } }
                         ]
                     }]
@@ -34,24 +34,22 @@ async function scanMedicine() {
 
             const data = await response.json();
             
-            // This part ensures the data is NOT deleted and shows on screen
             if (data.error) {
                 resultDiv.innerHTML = `<span style="color:red">Error: ${data.error.message}</span>`;
             } else if (data.candidates && data.candidates[0].content.parts[0].text) {
                 const aiText = data.candidates[0].content.parts[0].text;
-                // Displays the final result in your UI
-                resultDiv.innerHTML = `<strong>Scan Result:</strong><br>${aiText.replace(/\n/g, '<br>')}`;
+                resultDiv.innerHTML = `<strong>Scan Results:</strong><br>${aiText.replace(/\n/g, '<br>')}`;
             } else {
-                resultDiv.innerText = "No medicine detected. Try a better photo.";
+                resultDiv.innerText = "Could not identify medicine. Try a clearer photo.";
             }
-
         } catch (error) {
-            resultDiv.innerText = "Connection error. Check internet.";
+            resultDiv.innerText = "Connection error. Please try again.";
         }
     };
 
     reader.readAsDataURL(file);
 }
+
 
 
 
