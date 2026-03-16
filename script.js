@@ -48,3 +48,4 @@ async function scanMedicine() {
     reader.readAsDataURL(file);
 }
 
+
